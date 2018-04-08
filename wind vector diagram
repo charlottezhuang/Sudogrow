@@ -1,0 +1,101 @@
+import matplotlib.pyplot as plt
+
+from build_stations import update_stations_data
+
+
+
+
+B = update_stations_data()
+#print(B)
+#print(B['2018-04-05T00:00:00'][0].wind_speed)
+def vec_plot(time):
+    x=[]
+    y=[]
+    z=[]
+    direc=[]
+    u1=[]
+    v1=[]
+    fig = plt.figure()
+    ax = fig.gca()
+    i=0
+    c=[]
+    for station in B[time]:
+    #x, y, z = np.meshgrid(np.arange(-0.8, 1, 0.2),
+                          #np.arange(-0.8, 1, 0.2),
+                          #np.arange(-0.8, 1, 0.8))
+    
+        if(station.wind_speed == None):
+            #print('error')
+            continue
+        x.append(station.latitude)
+        y.append(station.longitude)
+        direc.append(station.wind_direction)
+    #z=np.arange(0,20,len(B['2018-04-05T00:00:00']))       
+        z.append(station.wind_speed)
+    
+    
+    # Make the direction data for the arrows
+       
+        if direc[i]=='N':
+            u,v=0,1
+        elif direc[i]=='NW':
+            u,v=-0.707,0.707
+        elif direc[i]=='NNW':
+            u,v=-0.38,0.92
+        elif direc[i]=='WNW':
+            u,v=-0.92,0.38
+        elif direc[i]=='W':
+            u,v=-1,0
+        elif direc[i]=='WSW':
+            u,v=-0.92,-0.38
+        elif direc[i]=='SW':
+            u,v=-0.707,-0.707
+        elif direc[i]=='SSW':
+            u,v=-0.38,-0.92
+        elif direc[i]=='S':
+            u,v=0,-1
+        elif direc[i]=='SSE':
+            u,v=0.38,-0.92
+        elif direc[i]=='SE':
+            u,v=0.707,-0.707
+        elif direc[i]=='ESE':
+            u,v=0.92,-0.38
+        elif direc[i]=='E':
+            u,v=1,0
+        elif direc[i]=='ENE':
+            u,v=0.92,0.38
+        elif direc[i]=='NE':
+            u,v=0.707,0.707
+        elif direc[i]=='NNE':
+            u,v=0.38,0.92
+        else:
+            print("no direction")
+            continue
+        if z[i]>5:
+            c.append('maroon')
+        elif z[i]>4:
+            c.append('red')
+        elif z[i]>3:
+            c.append('lightcoral')
+        else:
+            c.append('lightsalmon')
+        i+=1
+        #print(i)
+        u1.append(u)
+        v1.append(v)
+        
+    
+    
+    
+    #w = 0.07
+    ax.grid()
+    ax.quiver(x, y, u1, v1,angles='xy', scale_units='xy', color=c)
+    #plt.plot(x,y,'.')
+    ax.set_xlim([50, 55])
+    ax.set_ylim([-3, 2])
+    ax.set(xlabel='latitude (°)', ylabel='longitude (°)',
+           title='windspeed at stations')
+    
+    
+    plt.show()
+vec_plot('2018-04-05T00:00:00')
